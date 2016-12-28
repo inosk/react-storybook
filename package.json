@@ -10,5 +10,8 @@
     "stack-source-map": "^1.0.6",
     "webpack": "^1.14.0",
     "webpack-hot-middleware": "^2.14.0"
+  },
+  "devDependencies": {
+    "getstorybook": "^1.7.0"
   }
 }
