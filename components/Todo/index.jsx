@@ -1,26 +1,26 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { List } from 'immutable';
 import TodoItem from './TodoItem';
+import { actions } from '../../ducks/Todo';
 
 export default class Todo extends React.PureComponent {
-  componentWillMount() {
-    this.setState({
-      newTodo: '',
-      todos: [],
-    });
-  }
+  static propTypes = {
+    newTodo: PropTypes.string,
+    $$todos: PropTypes.instanceOf(List),
+    updateNewTodo: PropTypes.func.isRequired,
+    addTodo: PropTypes.func.isRequired,
+    toggleTodo: PropTypes.func.isRequired,
+  };
 
   handleChange(event) {
-    this.setState({ newTodo: event.target.value });
+    this.props.updateNewTodo(event.target.value);
   }
 
   handleCheck(event) {
     const todoId = event.target.id;
-    const checked = event.target.checked;
-    const newTodos = this.state.todos;
-
-    newTodos[todoId].done = checked;
-
-    this.setState({ todos: newTodos });
+    this.props.toggleTodo(todoId);
   }
 
   handleEnterKeyDown(event) {
@@ -28,32 +28,29 @@ export default class Todo extends React.PureComponent {
 
     if (event.keyCode === ENTER_KEY_CODE) {
       event.preventDefault();
-      const value = event.target.value;
-
-      this.setState({
-        newTodo: '',
-        todos: this.state.todos.concat({ name: value, done: false }),
-      });
+      this.props.addTodo(event.target.value);
     }
   }
 
   render() {
+    const { newTodo, $$todos } = this.props;
+
     return (
       <div>
         <input
-          value={this.state.newTodo}
+          value={newTodo}
           onChange={(event) => { this.handleChange(event); }}
           onKeyDown={(event) => { this.handleEnterKeyDown(event); }}
         />
 
         {
-          this.state.todos.map((todo, index) => (
+          $$todos.map(($$todo, index) => (
             <TodoItem
               key={index}
               todoId={index}
-              todo={todo.name}
-              done={todo.done}
-              handleCheck={this.handleCheck}
+              todo={$$todo.get('name')}
+              done={$$todo.get('done')}
+              handleCheck={e => this.handleCheck(e)}
             />
           ))
         }
@@ -61,3 +58,18 @@ export default class Todo extends React.PureComponent {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    newTodo: state.get('newTodo'),
+    $$todos: state.get('todos'),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    ...bindActionCreators(actions, dispatch),
+  };
+}
+
+export const TodoContainer = connect(mapStateToProps, mapDispatchToProps)(Todo);

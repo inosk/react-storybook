@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf, action, linkTo } from '@kadira/storybook';
 import Button from './Button';
 import Welcome from './Welcome';
-import Todo from '../components/Todo';
+import TodoApp from './TodoApp';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -18,6 +18,4 @@ storiesOf('Button', module)
   ));
 
 storiesOf('Todo', module)
-  .add('todo', () => (
-    <Todo />
-  ));
+  .add('todo', () => (<TodoApp />));
