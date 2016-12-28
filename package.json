@@ -12,6 +12,11 @@
     "webpack-hot-middleware": "^2.14.0"
   },
   "devDependencies": {
-    "getstorybook": "^1.7.0"
+    "getstorybook": "^1.7.0",
+    "@kadira/storybook": "^2.21.0"
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   }
 }
