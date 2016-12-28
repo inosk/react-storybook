@@ -1,4 +1,5 @@
 import React from 'react';
+import TodoItem from './TodoItem';
 
 export default class Todo extends React.PureComponent {
   componentWillMount() {
@@ -12,6 +13,16 @@ export default class Todo extends React.PureComponent {
     this.setState({ newTodo: event.target.value });
   }
 
+  handleCheck(event) {
+    const todoId = event.target.id;
+    const checked = event.target.checked;
+    const newTodos = this.state.todos;
+
+    newTodos[todoId].done = checked;
+
+    this.setState({ todos: newTodos });
+  }
+
   handleEnterKeyDown(event) {
     const ENTER_KEY_CODE = 13;
 
@@ -21,7 +32,7 @@ export default class Todo extends React.PureComponent {
 
       this.setState({
         newTodo: '',
-        todos: this.state.todos.concat([value]),
+        todos: this.state.todos.concat({ name: value, done: false }),
       });
     }
   }
@@ -36,7 +47,15 @@ export default class Todo extends React.PureComponent {
         />
 
         {
-          this.state.todos.map((todo, index) => (<p key={index}>{todo}</p>))
+          this.state.todos.map((todo, index) => (
+            <TodoItem
+              key={index}
+              todoId={index}
+              todo={todo.name}
+              done={todo.done}
+              handleCheck={this.handleCheck}
+            />
+          ))
         }
       </div>
     );
