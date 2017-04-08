@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { List } from 'immutable';
 import TodoItem from './TodoItem';
+import TodoOptions from './TodoOptions';
 import { actions } from '../../ducks/Todo';
 
 export default class Todo extends React.PureComponent {
@@ -12,6 +13,7 @@ export default class Todo extends React.PureComponent {
     updateNewTodo: PropTypes.func.isRequired,
     addTodo: PropTypes.func.isRequired,
     toggleTodo: PropTypes.func.isRequired,
+    toggleVisible: PropTypes.func.isRequired,
   };
 
   handleChange(event) {
@@ -33,7 +35,7 @@ export default class Todo extends React.PureComponent {
   }
 
   render() {
-    const { newTodo, $$todos } = this.props;
+    const { newTodo, $$todos, visible, toggleVisible } = this.props;
 
     return (
       <div>
@@ -43,16 +45,25 @@ export default class Todo extends React.PureComponent {
           onKeyDown={(event) => { this.handleEnterKeyDown(event); }}
         />
 
+        <TodoOptions
+          visible={visible}
+          toggleVisible={toggleVisible}
+        />
+
         {
-          $$todos.map(($$todo, index) => (
-            <TodoItem
-              key={index}
-              todoId={index}
-              todo={$$todo.get('todo')}
-              done={$$todo.get('done')}
-              handleCheck={e => this.handleCheck(e)}
-            />
-          ))
+          $$todos.map(($$todo, index) => {
+            if (visible || !$$todo.get('done')) {
+              return (
+                <TodoItem
+                  key={index}
+                  todoId={index}
+                  todo={$$todo.get('todo')}
+                  done={$$todo.get('done')}
+                  handleCheck={e => this.handleCheck(e)}
+                />
+              );
+            }
+          })
         }
       </div>
     );
@@ -63,6 +74,7 @@ function mapStateToProps(state) {
   return {
     newTodo: state.get('newTodo'),
     $$todos: state.get('todos'),
+    visible: state.get('visible'),
   };
 }
 

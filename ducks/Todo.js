@@ -5,6 +5,7 @@ import TodoState from '../models/TodoState.js';
 const UPDATE_NEW_TODO = 'Todo/UPDATE_NEW_TODO';
 const ADD_TODO = 'Todo/ADD_TODO';
 const TOGGLE_TODO = 'Todo/TOGGLE_TODO';
+const TOGGLE_VISIBLE = 'Todo/TOGGLE_VISIBLE';
 
 // Action Creators
 function updateNewTodo(value) {
@@ -19,10 +20,15 @@ function toggleTodo(todoId) {
   return { type: TOGGLE_TODO, value: todoId };
 }
 
+function toggleVisible() {
+  return { type: TOGGLE_VISIBLE }
+}
+
 export const actions = {
   updateNewTodo,
   addTodo,
   toggleTodo,
+  toggleVisible,
 };
 
 // initialState
@@ -40,6 +46,8 @@ const reducer = ($$state = $$initialState, action = {}) => {
       return $$state.addTodo(action.value);
     case TOGGLE_TODO:
       return $$state.toggleTodo(action.value);
+    case TOGGLE_VISIBLE:
+      return $$state.toggleVisible();
     default:
       return $$state;
   }
