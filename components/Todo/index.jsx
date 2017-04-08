@@ -48,7 +48,7 @@ export default class Todo extends React.PureComponent {
             <TodoItem
               key={index}
               todoId={index}
-              todo={$$todo.get('name')}
+              todo={$$todo.get('todo')}
               done={$$todo.get('done')}
               handleCheck={e => this.handleCheck(e)}
             />
